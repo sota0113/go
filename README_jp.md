@@ -1,15 +1,15 @@
 # JSONを返す Go API Server
 
-JSONを返すだけのAPIサーバーです。ローカル環境向けです。
-ルートディレクトリはヘルスチェック用で"{status:up}"を返します。
-デフォルトではディレクトリ"/dir"はランタイムが動作するホストのホスト名と全てのIPアドレスとos情報を返します。
+JSONを返すだけのAPIサーバーです。ローカル環境向けです。  
+ルートディレクトリはヘルスチェック用で"{status:up}"を返します。  
+デフォルトではディレクトリ"/dir"はランタイムが動作するホストのホスト名と全てのIPアドレスとos情報を返します。  
 
 # 使い方
-dockerコンテナーでビルドして動作させることを想定しています。
-`docker build`コマンドでイメージを生成し、コンテナーポート8080番と任意のホストポートを紐づけてイメージを起動します。
+dockerコンテナーでビルドして動作させることを想定しています。  
+`docker build`コマンドでイメージを生成し、コンテナーポート8080番と任意のホストポートを紐づけてイメージを起動します。  
 
-上述の通り、コンテナーの"/dir"にアクセスすると、デフォルトでホスト名、ホストの全てのIPアドレス、OS情報を返します。
-コンテナーからのリターン内容は変更可能です。リターン内容を変更するには`CRUD操作`の章を参照してください。
+上述の通り、コンテナーの"/dir"にアクセスすると、デフォルトでホスト名、ホストの全てのIPアドレス、OS情報を返します。  
+コンテナーからのリターン内容は変更可能です。リターン内容を変更するには`CRUD操作`の章を参照してください。  
 
 ```
 ##　コンテナーがローカルホストで動作しており、コンテナーポート8080番がホストポート30001番と紐づいて起動していると仮定します。
@@ -22,8 +22,7 @@ Content-Length: 77
 {"ipaddress":["127.0.0.1,172.17.0.3"],"hostname":"57d7191cc011","os":"linux"}
 ```
 
-上記のcurlコマンドを実行すると、コンテナーの標準出力として以下のようなログが出力されます。
-Accessing container with curl as above leads to output logs to `stdout` as below.
+上記のcurlコマンドを実行すると、コンテナーの標準出力として以下のようなログが出力されます。  
 ```
 [ debug ] 2019/02/27 04:51:51 return_OSInfo.go:140: Application is started.
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:46: Received access.
@@ -40,12 +39,11 @@ Accessing container with curl as above leads to output logs to `stdout` as below
 
 
 # CRUD操作
-アプリケーションのリターン内容は変更可能です。
+アプリケーションのリターン内容は変更可能です。  
 現時点では、`text/plain` と `application/json` がContent-Typeとて利用可能です。
-The type of content is automatically distinguished.
 
 ## Create
-現時点では`Update`と同一操作です。`Update`を参照してください。
+現時点では`Update`と同一操作です。`Update`を参照してください。  
 現時点では、複数のディレクトリを作成して、ディレクトリ別に複数のJSONを返却させることはできません。
 
 ## Read
