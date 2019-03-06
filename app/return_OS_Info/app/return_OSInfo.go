@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"github.com/comail/colog"
 	"runtime"
+	"bytes"
 )
 
 
@@ -134,7 +135,7 @@ func main () {
 	colog.Register()
 
 	// handlers
-	http.HandleFunc("/dir",dirHandler)
+	http.HandleFunc("/default",dirHandler)
 	http.HandleFunc("/",healthHandler)
 
 	log.Printf("debug: Application is started.")
