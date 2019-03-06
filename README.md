@@ -55,6 +55,7 @@ CONTENT UPDATED. Contetnt type is Application/json.
 ```
 
 Make sure your update is reflected correctly.
+```
 ~ ❯❯❯ curl -i http://localhost:30001/dir
 HTTP/1.1 200 OK
 Content-Type: Application/json
