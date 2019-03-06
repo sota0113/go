@@ -44,6 +44,7 @@ The type of content is automatically distinguished.
 
 ## Create
 Same operation with `Upadte` for now. See chapter `Upadte` below.
+For now, creating multiple directory and making JSON return on each directory at the same time is not capable.
 
 ## Read
 See first chapter `USAGE`. Execute GET request to the application.
