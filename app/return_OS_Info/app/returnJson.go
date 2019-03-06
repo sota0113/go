@@ -51,7 +51,7 @@ func dirHandler (w http.ResponseWriter,r *http.Request) {
 			ctype = "text/plain"
 		}
 
-	case "POST":
+	case "PUT":
 		//http.Request.Body is type of io.ReadCloser. Converting io.ReadCloser to String.
 		//See https://golangcode.com/convert-io-readcloser-to-a-string/
 		rbody := &returner
@@ -72,13 +72,13 @@ func dirHandler (w http.ResponseWriter,r *http.Request) {
 
 		err := r.ParseForm()
 		if err != nil {
-			log.Printf("error: Got error in parseing POST form.")
+			log.Printf("error: Got error on parseing PUT form.")
 		}
 
 		result = []byte("CONTENT UPDATED. Contetnt type is "+ctype+".\n")
 
-	case "PUT":
-		fmt.Println("PUT method function comming soon.")
+	case "POST":
+		fmt.Println("POST method function comming soon.")
 
 	case "DELETE":
 		rbody := &returner
