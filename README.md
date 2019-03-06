@@ -1,15 +1,15 @@
 # Go API Server Just Returns your JSON.
 
-For Japanese [日本語](/README_jp.md)  
-just returns json object as an API server.
-Root directory is for health check and returns json "{status:up}".
+For Japanese, see [日本語](/README_jp.md).  
+just returns json object as an API server.  
+Root directory is for health check and returns json "{status:up}".  
 As default, "/dir" directory returns its IP addresses and os inforation with json format.
 
 # USAGE
-build the app with `docker build` command and run exposing container port 8080 to any host port.
-Using docker, run like `docker run ${THIS IMAGE} -p $PORT:8080`.
+build the app with `docker build` command and run exposing container port 8080 to any host port.  
+Using docker, run like `docker run ${THIS IMAGE} -p $PORT:8080`.  
 
-When you access to container with directory "/dir", it returns json as default including ip address, hostname and OS type of running container.
+When you access to container with directory "/dir", it returns json as default including ip address, hostname and OS type of running container.  
 The return object is changeable. To configure your retrun, see next chapter `CRUD Operation`.
 ```
 ## Let's say, the application is running on localhost and listen port 30001 of localhost.
@@ -37,14 +37,13 @@ Accessing container with curl as above leads to output logs to `stdout` as below
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:55: Response: <nil>
 ```
 
-
 # CRUD Operation
-Return object of this application is changeable.
-`text/plain` and `application/json` is the usable Content-Type  for now.
-The type of content is automatically distinguished.
+Return object of this application is changeable.  
+`text/plain` and `application/json` is the usable Content-Type  for now.  
+The type of content is automatically distinguished.  
 
 ## Create
-Same operation with `Upadte` for now. See chapter `Upadte` below.
+Same operation with `Upadte` for now. See chapter `Upadte` below.  
 For now, creating multiple directory and making JSON return on each directory at the same time is not capable.
 
 ## Read
