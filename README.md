@@ -1,5 +1,6 @@
 # Go Application for test on Container Services.
 
+just returns json object as an API server.
 Root directory is for health check and returns json "{status:up}".
 "/dir" directory returns its IP addresses and os inforation with json format as default.
 
