@@ -1,12 +1,13 @@
 # Go API Server Just Returns your JSON.
 
 For Japanese, see [日本語](/README_jp.md).  
+Docker image [IMAGE](https://hub.docker.com/r/sota0113/jpi-server)
 just returns json object as an API server.  
 Root directory is for health check and returns json "{status:up}".  
 As default, "/dir" directory returns its IP addresses and os inforation with json format.
 
 # USAGE
-build the app with `docker build` command and run exposing container port 8080 to any host port.  
+pull image `docker pull sota0113/jpi-server:go-1.11.5` or build the app with `docker build` command and run exposing container port 8080 to any host port.  
 Using docker, run like `docker run ${THIS IMAGE} -p $PORT:8080`.  
 
 When you access to container with directory "/dir", it returns json as default including ip address, hostname and OS type of running container.  
