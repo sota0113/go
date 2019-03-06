@@ -1,7 +1,7 @@
 # Go Application for test on Container Services.
 
 Root directory is for health check and returns json "{status:up}".
-"/dir" directory returns its IP addresses and os inforation with json format.
+"/dir" directory returns its IP addresses and os inforation with json format as default.
 
 # USAGE
 build the app with `docker build` command, then run app with port 8080.
