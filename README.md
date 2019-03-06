@@ -1,4 +1,4 @@
-# Go API Server Just Return your JSON.
+# Go API Server Just Returns your JSON.
 
 just returns json object as an API server.
 Root directory is for health check and returns json "{status:up}".
