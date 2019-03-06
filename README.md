@@ -1,5 +1,6 @@
 # Go API Server Just Returns your JSON.
 
+For Japanese [日本語](/README_jp.md)
 just returns json object as an API server.
 Root directory is for health check and returns json "{status:up}".
 As default, "/dir" directory returns its IP addresses and os inforation with json format.
