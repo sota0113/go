@@ -4,7 +4,7 @@ Root directory is for health check and returns json "{status:up}".
 "/dir" directory returns its IP addresses and os inforation with json format as default.
 
 # USAGE
-build the app with `docker build` command, then run app with port 8080.
+build the app with `docker build` command and run exposing container port 8080 to any host port.
 Using docker, run like `docker run ${THIS IMAGE} -p $PORT:8080`.
 
 When you access to container with directory "/dir", it returns json as default including ip address, hostname and OS type of running container.
