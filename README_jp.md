@@ -2,7 +2,8 @@
 
 For English, see [English](/README.md).  
 Docker image [IMAGE](https://hub.docker.com/r/sota0113/jpi-server)  
-JSONを返すだけのAPIサーバーです。ローカル環境用です。  
+任意のエンドポイントを作成しオブジェクトをリターンするAPIサーバーです。ローカル環境用です。  
+![image](https://github.com/sota0113/go/blob/images/image/goApiServer.png)  
 ルートディレクトリはヘルスチェック用で"{status:up}"を返します。  
 デフォルトではディレクトリ"/list"はランタイムが動作するホストのホスト名と全てのIPアドレスとos情報を返します。  
 

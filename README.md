@@ -4,7 +4,7 @@ For Japanese, see [日本語](/README_jp.md).
 Docker image [IMAGE](https://hub.docker.com/r/sota0113/jpi-server)  
 just returns custom object as an API server.  
 
-![image](https://github.com/sota0113/go/blob/images/image/goApiServer.png)
+![image](https://github.com/sota0113/go/blob/images/image/goApiServer.png)  
 Root directory is for health check and returns json "{status:up}".  
 As default, "/dir" directory returns its IP addresses and os inforation with json format.
 
