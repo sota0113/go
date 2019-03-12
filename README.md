@@ -66,7 +66,8 @@ Content-Length: 0
 Same operation as `Upadte` for now. See chapter `Upadte` below. 
 
 ## PUT
-To update return object, execute `PUT` request operation against a path `/list/api/v1/${CONTENTNAME}`.  
+To update return object, execute `PUT` request operation against a path `/list/api/v1/${CONTENTNAME}`. 
+`${CONTENTNAME}` could be any string of content name. "/" is not allowed to include. It would return 409.  
 If your content is new one and created successfully, it would return 201.  
 If your content already exists, meaning update your content, it would return 204.  
 Here is an example.
