@@ -1,4 +1,4 @@
-# Go API Server Just Returns your JSON.
+# Go API Server with custom endpoints and objects.
 
 For Japanese, see [日本語](/README_jp.md).  
 Docker image [IMAGE](https://hub.docker.com/r/sota0113/jpi-server)  

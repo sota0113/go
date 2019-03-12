@@ -1,4 +1,4 @@
-# JSONを返す Go API Server
+# Go API Server
 
 For English, see [English](/README.md).  
 Docker image [IMAGE](https://hub.docker.com/r/sota0113/jpi-server)  
