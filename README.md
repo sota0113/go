@@ -47,13 +47,43 @@ The type of content is automatically distinguished.
 Same operation with `Upadte` for now. See chapter `Upadte` below.  
 For now, creating multiple directory and making JSON return on each directory at the same time is not capable.
 
+
+
 ## Read
 See first chapter `USAGE`. Execute GET request to the application.
 
-## Update
-To change return object, execute `PUT` operation. Here is an example.
+If you operate GET request against unexist path, it would return 404.
 ```
-~ ❯❯❯ curl -X PUT localhost:3001/dir  -H "Content-Type: x-www-form-urlencoded" -d '{"message": "Hello World."}'
+❯❯❯ curl -i -X GET http://localhost:3002/list/api/v1/unExistContent
+HTTP/1.1 404 Not Found
+Date: Sun, 10 Mar 2019 13:35:36 GMT
+Content-Length: 0
+```
+
+
+## Update
+To change return object, execute `PUT` request operation against a path `/list/api/v1/${CONTENTNAME}`.  
+If your content is created successfully, it would return 204.
+Here is an example.
+
+```
+❯❯❯ curl -i -X PUT localhost:3002/list/api/v1/newContent -H "Content-Type: application/json" -d '{"message": "Welcome to underground"}'
+HTTP/1.1 204 No Content
+Date: Sun, 10 Mar 2019 15:49:25 GMT
+```
+
+make sure ${CONTENTNAME} of your request path `/list/api/v1/${CONTENTNAME}` does not contain "/".  
+If "/" is included in request path, it would return 409.
+```
+❯❯❯ curl -i -X PUT localhost:3002/list/api/v1/xxx/  -H "Content-Type: text/plain" -d 'デニム of デニム'
+HTTP/1.1 409 Conflict
+Date: Sun, 10 Mar 2019 15:53:41 GMT
+Content-Length: 0
+```
+
+
+```
+~ ❯❯❯ curl -X PUT localhost:3001/dir  -H "Content-Type: application/json" -d '{"message": "Hello World."}'
 CONTENT UPDATED. Contetnt type is Application/json.
 ```
 

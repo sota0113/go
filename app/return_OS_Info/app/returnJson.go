@@ -6,11 +6,12 @@ import (
 	"log"
 	"net/http"
 	"github.com/comail/colog"
+	"github.com/peterbourgon/diskv"
 	"bytes"
-	"fmt"
 	"runtime"
 	"strings"
 	"net"
+	"fmt"
 )
 
 
@@ -34,6 +35,135 @@ func healthHandler (w http.ResponseWriter,r *http.Request) { //what does this st
 	log.Printf("info: Health check completed.")
 }
 
+func apidirHandler (w http.ResponseWriter,r *http.Request) {
+
+	// Simplest transform function: put all the data files into the base dir.
+	flatTransform := func(s string) []string { return []string{} }
+	// Initialize a new diskv store, rooted at "my-data-dir", with a 1MB cache.
+	d := diskv.New(diskv.Options{
+	        BasePath:       "/opt/jpi-server",
+	        Transform:      flatTransform,
+	        CacheSizeMax: 1024 * 1024,
+	});
+	keyName := strings.TrimLeft(r.RequestURI,"/list/v1/api/")
+
+        var result []byte
+	var rcode int
+        var logBody string
+        var ctype string
+	switch method := r.Method; method {
+
+	case "GET":
+
+		if strings.Index(keyName,"/") <= 0 {
+			result, _ = d.Read(keyName)
+			if len(result) <= 0 {
+				rcode = 404
+			} else {
+				rcode = 200
+				rtype,_ := jsonCheck(result)
+				if rtype == "json" {
+					ctype = "application/json"
+				} else {
+					ctype = "text/plain"
+				}
+			}
+		} else {
+			rcode = 404
+		}
+
+	case "PUT":
+                //http.Request.Body is type of io.ReadCloser. Converting io.ReadCloser to String.
+                //See https://golangcode.com/convert-io-readcloser-to-a-string/
+
+		//r.url /vi/api/xxx/
+		//trim xxx.
+		// check xxx to kvs whether it already exists or not.
+		// if exist, update value of key xxx with r.Body.
+		// if not, create new key xxx and preserve its coresponding value r.Body to kvs.
+
+		alwd := false
+		alwdType := []string{"application/json","text/plain"}   //request returns Application Json.
+		rqType := r.Header["Content-Type"][0] //application/json
+
+		for _,v := range alwdType {
+			if rqType == v {
+				alwd = true
+			}
+		}
+
+		if alwd == false {
+			log.Printf("########FALSE#########")
+		}
+
+
+		if strings.Index(keyName,"/") <= 0 {
+	                bufbody := new(bytes.Buffer)
+	                bufbody.ReadFrom(r.Body)
+	                logBody = bufbody.String() //Converted. var "logBody" is for print body on log.
+
+	                //checking json or not.
+	                body := []byte(logBody)
+	                rtype,_ := jsonCheck(body)
+	                if rtype == "json" {
+		                        ctype = "application/json"
+		                } else {
+		                        ctype = "text/plain"
+		                }
+
+                        result, _ = d.Read(keyName) //check 
+                        if len(result) <= 0 {
+                                rcode = 201 // If a request update new content, 201 would be returned.
+                        } else {
+                                rcode = 204 //If a request update existed content, 204 would be returned.
+                        }
+
+			// Write
+			d.Write(keyName, body)
+			err := r.ParseForm()
+			if err != nil {
+				log.Printf("error: Got error on parseing PUT form.")
+			}
+			result = []byte("CONTENT UPDATED. Contetnt type is "+ctype+".\n")
+
+		} else {
+			rcode = 409
+		}
+
+	case "POST":	// POST request is not allowed.
+		rcode = 400
+
+	case "DELETE":
+
+                if strings.Index(keyName,"/") <= 0 {
+                        result, _ = d.Read(keyName)
+
+                        if len(result) <= 0 {
+                                rcode = 404
+                        } else {
+				rcode = 204
+				d.Erase(keyName)
+                        }
+		} else {
+			rcode = 404
+		}
+                result = []byte("")
+	}
+        w.Header().Set("Content-Type",ctype)
+	w.WriteHeader(rcode)
+        w.Write(result)
+        log.Printf("info: Received access.")
+        log.Printf("info: Protocol: %s",r.Proto)
+        log.Printf("info: Method: %s",r.Method)
+        log.Printf("info: Header: %s",r.Header)
+        log.Printf("info: Body: %s",logBody)
+        log.Printf("info: Host: %s",r.Host)
+        log.Printf("info: Form: %s",r.Form)
+        log.Printf("info: PostForm: %s",r.PostForm)
+        log.Printf("info: RequestURI: %s",r.RequestURI)
+        log.Printf("info: Response: %v",r.Response)
+}
+
 func dirHandler (w http.ResponseWriter,r *http.Request) {
 
 	var result []byte
@@ -46,46 +176,11 @@ func dirHandler (w http.ResponseWriter,r *http.Request) {
 		result,rtype = returnJson()
 
 		if rtype == "json" {
-			ctype = "Application/json"
+			ctype = "application/json"
 		} else {
 			ctype = "text/plain"
 		}
-
-	case "PUT":
-		//http.Request.Body is type of io.ReadCloser. Converting io.ReadCloser to String.
-		//See https://golangcode.com/convert-io-readcloser-to-a-string/
-		rbody := &returner
-		bufbody := new(bytes.Buffer)
-		bufbody.ReadFrom(r.Body)
-		logBody = bufbody.String() //Converted. var "logBody" is for print body on log.
-		*rbody = []byte(logBody)
-
-		//checking json or not.
-		body := []byte(logBody)
-		rtype,_ := jsonCheck(body)
-
-                if rtype == "json" {
-                        ctype = "Application/json"
-                } else {
-                        ctype = "text/plain"
-                }
-
-		err := r.ParseForm()
-		if err != nil {
-			log.Printf("error: Got error on parseing PUT form.")
-		}
-
-		result = []byte("CONTENT UPDATED. Contetnt type is "+ctype+".\n")
-
-	case "POST":
-		fmt.Println("POST method function comming soon.")
-
-	case "DELETE":
-		rbody := &returner
-		*rbody = nil
-		result = []byte("CONTENT DELETED.\n")
 	}
-
 	w.Header().Set("Content-Type",ctype)
 	w.Write(result)
 	log.Printf("info: Received access.")
@@ -127,9 +222,8 @@ func returnJson () ([]byte,string)  {
 	if len(b1) <= 0 {
 		b1 = osinfo
 	}
-	j1 := b1
-	rtype,_ := jsonCheck(j1)
-	return j1,rtype
+	rtype,_ := jsonCheck(b1)
+	return b1,rtype
 }
 
 func jsonCheck (j0 []byte) (string, error) {
@@ -201,6 +295,7 @@ func returnOsInfo (iparray []string,hostname string,os string) ([]byte, error)  
 
 func main () {
 	address := ":"+os.Getenv("PORT")
+	apiDir := os.Getenv("MAIN_DIR")+"/api/v1/"
 	// logging configurations
 	colog.SetDefaultLevel(colog.LDebug)
 	colog.SetMinLevel(colog.LTrace)
@@ -211,8 +306,9 @@ func main () {
 	colog.Register()
 
 	// handlers
-	http.HandleFunc("/dir",dirHandler)
-	http.HandleFunc("/",healthHandler)
+	http.HandleFunc(os.Getenv("MAIN_DIR"),dirHandler)
+	http.HandleFunc(apiDir,apidirHandler)
+	http.HandleFunc(os.Getenv("HEALTH_DIR"),healthHandler)
 
 	log.Printf("debug: Application is started.")
 	log.Fatal(http.ListenAndServe(address,nil))
