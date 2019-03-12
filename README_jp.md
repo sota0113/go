@@ -34,7 +34,7 @@ GETリクエストを発行すると、コンテナーの標準出力として�
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:48: Method: GET
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:49: Header: map[User-Agent:[curl/7.54.0] Accept:[*/*]]
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:50: Body: {}
-[  info ] 2019/02/27 04:52:01 return_OSInfo.go:51: Host: localhost:30001
+[  info ] 2019/02/27 04:52:01 return_OSInfo.go:51: Host: localhost:3002
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:52: Form: map[]
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:53: PostForm: map[]
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:54: RequestURI: /dir

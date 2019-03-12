@@ -13,7 +13,7 @@ Using docker, run like `docker run ${THIS IMAGE} -p $PORT:8080`.
 When you access to container with directory "/dir", it returns json as default including ip address, hostname and OS type of running container.  
 The return object is changeable. To configure your retrun, see next chapter `CRUD Operation`.
 ```
-## Let's say, the application is running on localhost and listen port 30001 of localhost.
+## Let's say, the application is running on localhost and listen port 3002 of localhost.
 ❯❯❯ curl -i -X GET http://localhost:3002/list
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -38,7 +38,7 @@ Accessing container with curl as above leads to output logs to `stdout` as below
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:48: Method: GET
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:49: Header: map[User-Agent:[curl/7.54.0] Accept:[*/*]]
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:50: Body: {}
-[  info ] 2019/02/27 04:52:01 return_OSInfo.go:51: Host: localhost:30001
+[  info ] 2019/02/27 04:52:01 return_OSInfo.go:51: Host: localhost:3002
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:52: Form: map[]
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:53: PostForm: map[]
 [  info ] 2019/02/27 04:52:01 return_OSInfo.go:54: RequestURI: /dir
