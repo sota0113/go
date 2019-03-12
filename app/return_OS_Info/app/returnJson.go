@@ -11,7 +11,6 @@ import (
 	"runtime"
 	"strings"
 	"net"
-	"fmt"
 )
 
 
@@ -29,10 +28,23 @@ type osInfo struct {
 
 //functions for each handlers
 func healthHandler (w http.ResponseWriter,r *http.Request) { //what does this star "*" mean?
-	result,_ := returnHealth()
-	w.Header().Set("Content/Type","Application/json")
+	var rcode int
+	var result []byte
+	if r.RequestURI == os.Getenv("HEALTH_DIR") {
+		switch r.Method {
+		case "GET":
+			rcode = 200
+	                w.Header().Set("Content/Type","Application/json")
+	                log.Printf("info: Health check completed.")
+	                result,_ = returnHealth()
+		default:
+			rcode = 400
+		}
+	} else {
+		rcode = 404
+	}
+	w.WriteHeader(rcode)
 	w.Write(result)
-	log.Printf("info: Health check completed.")
 }
 
 func apidirHandler (w http.ResponseWriter,r *http.Request) {
@@ -61,12 +73,7 @@ func apidirHandler (w http.ResponseWriter,r *http.Request) {
 				rcode = 404
 			} else {
 				rcode = 200
-				rtype,_ := jsonCheck(result)
-				if rtype == "json" {
-					ctype = "application/json"
-				} else {
-					ctype = "text/plain"
-				}
+				ctype,_ = jsonCheck(result)
 			}
 		} else {
 			rcode = 404
@@ -104,13 +111,7 @@ func apidirHandler (w http.ResponseWriter,r *http.Request) {
 
 	                //checking json or not.
 	                body := []byte(logBody)
-	                rtype,_ := jsonCheck(body)
-	                if rtype == "json" {
-		                        ctype = "application/json"
-		                } else {
-		                        ctype = "text/plain"
-		                }
-
+	                ctype,_ = jsonCheck(body)
                         result, _ = d.Read(keyName) //check 
                         if len(result) <= 0 {
                                 rcode = 201 // If a request update new content, 201 would be returned.
@@ -148,6 +149,8 @@ func apidirHandler (w http.ResponseWriter,r *http.Request) {
 			rcode = 404
 		}
                 result = []byte("")
+	default:
+		rcode = 400
 	}
         w.Header().Set("Content-Type",ctype)
 	w.WriteHeader(rcode)
@@ -168,20 +171,23 @@ func dirHandler (w http.ResponseWriter,r *http.Request) {
 
 	var result []byte
 	var logBody string
-	var rtype string
 	var ctype string
+	var rcode int
 
 	switch method := r.Method; method {
 	case "GET":
-		result,rtype = returnJson()
+		result,ctype = returnJson()
 
-		if rtype == "json" {
-			ctype = "application/json"
+		if len(result) <= 0 {
+			rcode = 404
 		} else {
-			ctype = "text/plain"
+			rcode = 200
 		}
+        default:
+                rcode = 400
 	}
 	w.Header().Set("Content-Type",ctype)
+	w.WriteHeader(rcode)
 	w.Write(result)
 	log.Printf("info: Received access.")
 	log.Printf("info: Protocol: %s",r.Proto)
@@ -222,20 +228,20 @@ func returnJson () ([]byte,string)  {
 	if len(b1) <= 0 {
 		b1 = osinfo
 	}
-	rtype,_ := jsonCheck(b1)
-	return b1,rtype
+	ctype,_ := jsonCheck(b1)
+	return b1,ctype
 }
 
 func jsonCheck (j0 []byte) (string, error) {
 	var parsedJson interface{}
-	var rtype string
+	var ctype string
 	err := json.Unmarshal(j0,&parsedJson)
         if err != nil {
-                rtype = "string"
+                ctype = "text/plain"
         } else {
-                rtype = "json"
+                ctype = "application/json"
         }
-	return rtype,err
+	return ctype,err
 }
 
 
