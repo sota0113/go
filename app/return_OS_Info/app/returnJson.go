@@ -63,6 +63,7 @@ func apidirHandler (w http.ResponseWriter,r *http.Request) {
 	var rcode int
         var logBody string
         var ctype string
+
 	switch method := r.Method; method {
 
 	case "GET":
@@ -99,36 +100,36 @@ func apidirHandler (w http.ResponseWriter,r *http.Request) {
 			}
 		}
 
-		if alwd == false {
-			log.Printf("########FALSE#########")
-		}
+		if alwd == true {
 
+			if strings.Index(keyName,"/") <= 0 {
+		                bufbody := new(bytes.Buffer)
+		                bufbody.ReadFrom(r.Body)
+		                logBody = bufbody.String() //Converted. var "logBody" is for print body on log.
 
-		if strings.Index(keyName,"/") <= 0 {
-	                bufbody := new(bytes.Buffer)
-	                bufbody.ReadFrom(r.Body)
-	                logBody = bufbody.String() //Converted. var "logBody" is for print body on log.
+		                //checking json or not.
+		                body := []byte(logBody)
+		                ctype,_ = jsonCheck(body)
+	                        result, _ = d.Read(keyName) //check 
+	                        if len(result) <= 0 {
+	                                rcode = 201 // If a request update new content, 201 would be returned.
+	                        } else {
+	                                rcode = 204 //If a request update existed content, 204 would be returned.
+	                        }
 
-	                //checking json or not.
-	                body := []byte(logBody)
-	                ctype,_ = jsonCheck(body)
-                        result, _ = d.Read(keyName) //check 
-                        if len(result) <= 0 {
-                                rcode = 201 // If a request update new content, 201 would be returned.
-                        } else {
-                                rcode = 204 //If a request update existed content, 204 would be returned.
-                        }
+				// Write
+				d.Write(keyName, body)
+				err := r.ParseForm()
+				if err != nil {
+					log.Printf("error: Got error on parseing PUT form.")
+				}
+				result = []byte("CONTENT UPDATED. Contetnt type is "+ctype+".\n")
 
-			// Write
-			d.Write(keyName, body)
-			err := r.ParseForm()
-			if err != nil {
-				log.Printf("error: Got error on parseing PUT form.")
+			} else {
+				rcode = 409
 			}
-			result = []byte("CONTENT UPDATED. Contetnt type is "+ctype+".\n")
-
 		} else {
-			rcode = 409
+			rcode =409
 		}
 
 	case "POST":	// POST request is not allowed.
