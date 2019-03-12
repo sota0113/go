@@ -14,13 +14,20 @@ When you access to container with directory "/dir", it returns json as default i
 The return object is changeable. To configure your retrun, see next chapter `CRUD Operation`.
 ```
 ## Let's say, the application is running on localhost and listen port 30001 of localhost.
-~ ❯❯❯ curl -i localhost:30001/dir
+❯❯❯ curl -i -X GET http://localhost:3002/list
 HTTP/1.1 200 OK
-Content-Type: Application/json
-Date: Wed, 06 Mar 2019 08:49:14 GMT
+Content-Type: application/json
+Date: Tue, 12 Mar 2019 12:22:48 GMT
 Content-Length: 77
 
-{"ipaddress":["127.0.0.1,172.17.0.3"],"hostname":"57d7191cc011","os":"linux"}
+{"ipaddress":["127.0.0.1,172.17.0.2"],"hostname":"cb0a02e8984d","os":"linux"}
+```
+Note, request end with "/" does not work.
+```
+❯❯❯ curl -i -X GET http://localhost:3002/list/
+HTTP/1.1 404 Not Found
+Date: Tue, 12 Mar 2019 12:22:44 GMT
+Content-Length: 0
 ```
 
 Accessing container with curl as above leads to output logs to `stdout` as below.
@@ -40,16 +47,10 @@ Accessing container with curl as above leads to output logs to `stdout` as below
 
 # CRUD Operation
 Return object of this application is changeable.  
-`text/plain` and `application/json` is the usable Content-Type  for now.  
+`text/plain` and `application/json` is the usable Content-Type for now.  
 The type of content is automatically distinguished.  
 
-## Create
-Same operation with `Upadte` for now. See chapter `Upadte` below.  
-For now, creating multiple directory and making JSON return on each directory at the same time is not capable.
-
-
-
-## Read
+## GET
 See first chapter `USAGE`. Execute GET request to the application.
 
 If you operate GET request against unexist path, it would return 404.
@@ -60,68 +61,59 @@ Date: Sun, 10 Mar 2019 13:35:36 GMT
 Content-Length: 0
 ```
 
+## POST
+`POST` operation is not allowed. It would return 400.  
+Same operation as `Upadte` for now. See chapter `Upadte` below. 
 
-## Update
-To change return object, execute `PUT` request operation against a path `/list/api/v1/${CONTENTNAME}`.  
-If your content is created successfully, it would return 204.
+## PUT
+To update return object, execute `PUT` request operation against a path `/list/api/v1/${CONTENTNAME}`.  
+If your content is new one and created successfully, it would return 201.  
+If your content already exists, meaning update your content, it would return 204.  
 Here is an example.
 
 ```
-❯❯❯ curl -i -X PUT localhost:3002/list/api/v1/newContent -H "Content-Type: application/json" -d '{"message": "Welcome to underground"}'
+## create new content.
+❯❯❯ curl -i -X PUT localhost:3002/list/api/v1/newContent -H "Content-Type: application/json" -d '{"message": "Hello World!"}'
+HTTP/1.1 201 Created
+Content-Type: application/json
+Date: Tue, 12 Mar 2019 12:31:57 GMT
+Content-Length: 52
+
+CONTENT UPDATED. Contetnt type is application/json.
+
+## update content.
+❯❯❯ curl -i -X PUT localhost:3002/list/api/v1/newContent -H "Content-Type: application/json" -d '{"message": "May the force be with you."}'
 HTTP/1.1 204 No Content
-Date: Sun, 10 Mar 2019 15:49:25 GMT
+Content-Type: application/json
+Date: Tue, 12 Mar 2019 12:36:10 GMT
 ```
 
 make sure ${CONTENTNAME} of your request path `/list/api/v1/${CONTENTNAME}` does not contain "/".  
 If "/" is included in request path, it would return 409.
 ```
-❯❯❯ curl -i -X PUT localhost:3002/list/api/v1/xxx/  -H "Content-Type: text/plain" -d 'デニム of デニム'
+❯❯❯ curl -i -X PUT localhost:3002/list/api/v1/newContent/  -H "Content-Type: application/json" -d '{"message": "Hello World!"}'
 HTTP/1.1 409 Conflict
 Date: Sun, 10 Mar 2019 15:53:41 GMT
 Content-Length: 0
 ```
 
-
-```
-~ ❯❯❯ curl -X PUT localhost:3001/dir  -H "Content-Type: application/json" -d '{"message": "Hello World."}'
-CONTENT UPDATED. Contetnt type is Application/json.
-```
-
-Make sure your update is reflected correctly.
-```
-~ ❯❯❯ curl -i http://localhost:30001/dir
-HTTP/1.1 200 OK
-Content-Type: Application/json
-Date: Wed, 06 Mar 2019 08:49:27 GMT
-Content-Length: 37
-
-{"message": "Hello World."}
-```
-
-POST is not acceptable at this verstion.
-
 ## Delete
-To Delete your content, execute Delete request.
+To Delete your content, execute Delete request.  
+If your opeartion succeeded, it would return 204.
 
 ```
-~ ❯❯❯ curl -i -X DELETE http://localhost:30001/dir
-HTTP/1.1 200 OK
+❯❯❯ curl -i -X DELETE http://localhost:3002/list/api/v1/newContent
+HTTP/1.1 204 No Content
 Content-Type:
-Date: Wed, 06 Mar 2019 08:49:34 GMT
-Content-Length: 17
-
-CONTENT DELETED.
+Date: Tue, 12 Mar 2019 12:39:08 GMT
 ```
 
-Make sure your update is reflected correctly.
+Once your content is deleted, the endpoint returns 404.
 ```
-~ ❯❯❯ curl -i http://localhost:30001/dir
-HTTP/1.1 200 OK
-Content-Type: Application/json
-Date: Wed, 06 Mar 2019 08:49:37 GMT
-Content-Length: 77
-
-{"ipaddress":["127.0.0.1,172.17.0.3"],"hostname":"57d7191cc011","os":"linux"}
+❯❯❯ curl -i -X GET http://localhost:3002/list/api/v1/newContent
+HTTP/1.1 404 Not Found
+Content-Type:
+Date: Tue, 12 Mar 2019 12:39:23 GMT
+Content-Length: 0
 ```
 
-default return object is not deleatable.
