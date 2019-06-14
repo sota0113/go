@@ -6,7 +6,7 @@ just returns custom object as an API server.
 
 ![image](https://github.com/sota0113/go/blob/images/image/goApiServer.png)  
 Root directory is for health check and returns json "{status:up}".  
-As default, "/dir" directory returns its IP addresses and os inforation with json format.
+As default, "/list" directory returns its IP addresses and os inforation with json format.
 
 # USAGE
 pull image `docker pull sota0113/jpi-server:${IMAGE_VERSION}` or build the app with `docker build` command and run exposing container port 8080 to any host port.  
