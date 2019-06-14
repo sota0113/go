@@ -10,12 +10,14 @@ As default, "/dir" directory returns its IP addresses and os inforation with jso
 
 # USAGE
 pull image `docker pull sota0113/jpi-server:${IMAGE_VERSION}` or build the app with `docker build` command and run exposing container port 8080 to any host port.  
-Using docker, run like `docker run ${THIS IMAGE} -p $PORT:8080`.  
+To use this image on docker, run like `docker run ${THIS IMAGE} -p $PORT:8080`.
+To use this image on Kubernetes, register the image on kubernetes image registry and simply deploy manifest files in `go/app/return_OS_Info/kubernetes/`.
 
-When you access to container with directory "/dir", it returns json as default including ip address, hostname and OS type of running container.  
+
+When you access to container with directory "/list", it returns json as default including ip address, hostname and OS type of running container.  
 The return object is changeable. To configure your retrun, see next chapter `CRUD Operation`.
 ```
-## Let's say, the application is running on localhost and listen port 3002 of localhost.
+## Let's say, the application is running on localhost using docker and listening on port 3002 of localhost.
 ❯❯❯ curl -i -X GET http://localhost:3002/list
 HTTP/1.1 200 OK
 Content-Type: application/json
