@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-go-deployment
+  namespace: default
+  labels:
+    app: sample-go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-go
+  template:
+    metadata:
+      labels:
+        app: sample-go
+    spec:
+      containers:
+      - name: sample-go
+        image: mycluster.icp:8500/default/sample-go:1.0
+        ports:
+        - containerPort: 8080
