@@ -66,8 +66,9 @@ Content-Length: 0
 ```
 
 ## POST
-`POST` operation is not allowed. It would return 400.  
-Same operation as `Upadte` for now. See chapter `Upadte` below. 
+POST operation currently work as same as PUT operation. See PUT section.  
+~`POST` operation is not allowed. It would return 400.~  
+~Same operation as `Upadte` for now. See chapter `Upadte` below.~ 
 
 ## PUT
 To update return object, execute `PUT` request operation against a path `/list/api/v1/${CONTENTNAME}`. 

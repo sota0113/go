@@ -80,7 +80,7 @@ func apidirHandler (w http.ResponseWriter,r *http.Request) {
 			rcode = 404
 		}
 
-	case "PUT":
+	case "PUT", "POST":
                 //http.Request.Body is type of io.ReadCloser. Converting io.ReadCloser to String.
                 //See https://golangcode.com/convert-io-readcloser-to-a-string/
 
@@ -132,8 +132,8 @@ func apidirHandler (w http.ResponseWriter,r *http.Request) {
 			rcode =409
 		}
 
-	case "POST":	// POST request is not allowed.
-		rcode = 400
+//	case "POST":	// POST request is not allowed.
+//		rcode = 400
 
 	case "DELETE":
 
