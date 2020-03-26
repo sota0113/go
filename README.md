@@ -10,7 +10,7 @@ As default, "/list" directory returns its IP addresses and os inforation with js
 
 # USAGE
 pull image `docker pull sota0113/jpi-server:${IMAGE_VERSION}` or build the app with `docker build` command and run exposing container port 8080 to any host port.  
-To use this image on docker, run like `docker run ${THIS IMAGE} -p $PORT:8080`.
+To use this image on docker, execute command `docker run ${THIS IMAGE} -p $PORT:8080`.
 To use this image on Kubernetes, register the image on kubernetes image registry and simply deploy manifest files in `go/app/return_OS_Info/kubernetes/`.
 
 
